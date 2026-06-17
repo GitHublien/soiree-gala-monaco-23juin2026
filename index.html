@@ -237,7 +237,10 @@
   .b-instr{ background:rgba(120,120,120,.1); color:#aaa; border:1px solid #555; }
   .b-def{ background:rgba(217,134,107,.1); color:#d9866b; border:1px solid #a05540; font-style:italic; }
   .b-dans{ background:linear-gradient(135deg,rgba(201,168,76,.22),rgba(232,213,163,.08)); color:var(--champ); border:1px solid var(--or-cl); }
-  .trk-variant { font-family:'Montserrat',sans-serif; font-size:.75em; background:var(--bg-2); color:var(--or-cl); border:1px solid var(--or-dk); border-radius:4px; padding:5px 8px; cursor:pointer; }
+  .trk-variant-wrap { display:inline-flex; align-items:center; gap:6px; background:var(--shine); padding:4px 6px 4px 11px; border-radius:30px; box-shadow:0 3px 12px rgba(201,168,76,.4); }
+  .trk-variant-wrap .vlabel { font-family:'Cinzel',serif; font-size:.6em; letter-spacing:.1em; color:#1a1206; text-transform:uppercase; font-weight:600; }
+  .trk-variant { font-family:'Montserrat',sans-serif; font-weight:600; font-size:.78em; background:#1a1206; color:var(--or-br); border:1px solid #1a1206; border-radius:20px; padding:5px 10px; cursor:pointer; outline:none; }
+  .trk-variant:hover { background:#000; }
 
   /* ===== MOMENT SPÉCIAL ===== */
   .moment { background:linear-gradient(135deg, rgba(20,17,15,.95), rgba(42,33,22,.85)); border:2px solid var(--or); padding:34px; margin:26px 0; text-align:center; position:relative; box-shadow:var(--sh-or); }
@@ -414,7 +417,7 @@
     <div class="mot">
       Bonjour à toutes et à tous,<br><br>
       Voici le programme complet de la soirée du 23 juin, avec <strong>toutes les pistes regroupées au même endroit</strong>. Vous pouvez écouter chaque morceau directement ici, dans l'ordre de la soirée — il suffit d'appuyer sur lecture.<br><br>
-      Les morceaux sur <strong>instrumental</strong> ont leur bande disponible ci-dessous. Ceux marqués <strong>live</strong> seront joués directement par les musiciens. Pour <strong>My Way</strong>, vous pouvez choisir la tonalité (−½ ton ou −1 ton) grâce au menu sur la ligne du morceau.<br><br>
+      Les morceaux sur <strong>instrumental</strong> ont leur bande disponible ci-dessous. Ceux marqués <strong>live</strong> seront joués directement par les musiciens. Pour <strong>My Way</strong>, vous pouvez choisir la tonalité (normale, −½ ton ou −1 ton) grâce au menu doré sur la ligne du morceau.<br><br>
       N'hésitez pas à me faire vos retours, et on cale tout ensemble à la répétition du 22.
     </div>
   </div>
@@ -556,6 +559,7 @@ const TRACKS = [
     file:'Set2-05 - Mon amant de Saint-Jean (Mickael).mp3', dur:202, scene:'Mini-théâtre musical avec la danseuse' },
   { t:'My Way / Comme d\'habitude', c:'Sinatra — Claude François · duo bilingue', v:'Duo', badge:'instr', duo:true,
     variants:[
+      { label:'Tonalité normale', file:'Set2-06 - My Way Comme d\'habitude (Duo) version normale.mp3', dur:245 },
       { label:'−½ ton', file:'Set2-06a - My Way Comme d\'habitude (Duo) version -1demi-ton.mp3', dur:245 },
       { label:'−1 ton', file:'Set2-06b - My Way Comme d\'habitude (Duo) version -1ton.mp3', dur:245 },
     ], scene:'Mickaël en anglais, Alexandra en français — final crescendo' },
@@ -625,8 +629,8 @@ TRACKS.forEach((tk, i) => {
   // variantes (My Way)
   let variantSel = '';
   if (tk.variants) {
-    variantSel = `<select class="trk-variant" data-variant="${i}">` +
-      tk.variants.map((v,vi)=>`<option value="${vi}">${v.label}</option>`).join('') + `</select>`;
+    variantSel = `<span class="trk-variant-wrap"><span class="vlabel">🎚 Tonalité</span><select class="trk-variant" data-variant="${i}">` +
+      tk.variants.map((v,vi)=>`<option value="${vi}">${v.label}</option>`).join('') + `</select></span>`;
   }
 
   const dans = tk.dans ? '<span class="badge b-dans">♚ Danseuse</span>' : '';
