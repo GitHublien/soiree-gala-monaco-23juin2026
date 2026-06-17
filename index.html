@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Soirée Gala — Hôtel de Paris, Monaco — 23 juin 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Great+Vibes&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0908;
+    --bg-2: #14110f;
+    --bg-3: #1c1813;
+    --card: rgba(22, 18, 14, 0.94);
+    --txt: #f5f0e8;
+    --txt-soft: #cabfa9;
+    --txt-mute: #8a7f6b;
+    --or: #c9a84c;
+    --or-cl: #e8d5a3;
+    --or-br: #f4e4ba;
+    --or-dk: #8a6f2e;
+    --champ: #f5e8c7;
+    --shine: linear-gradient(135deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
+    --sh-or: 0 8px 40px rgba(201,168,76,0.22);
+    --sh-deep: 0 24px 70px rgba(0,0,0,0.6);
+    --player-h: 92px;
+  }
+  [data-theme="ivoire"] {
+    --bg:#efe9dc; --bg-2:#e7e0d0; --bg-3:#ded5c2; --card:rgba(250,246,238,0.97);
+    --txt:#322a1d; --txt-soft:#5d5340; --txt-mute:#8f836a; --or:#9c7e23; --or-cl:#b8912f; --champ:#6b5318;
+  }
+  [data-theme="nuit"] {
+    --bg:#0a1622; --bg-2:#0f1e30; --bg-3:#15273d; --card:rgba(15,30,48,0.95);
+    --txt:#e8eef5; --txt-soft:#b4c4d6; --txt-mute:#7a8ca0; --or:#d8b450; --or-cl:#f0dca0;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body {
+    font-family:'Cormorant Garamond', Georgia, serif;
+    background:var(--bg); color:var(--txt); line-height:1.7;
+    overflow-x:hidden; transition:background .5s, color .5s;
+    padding-bottom:var(--player-h);
+  }
+  body::before {
+    content:''; position:fixed; inset:0;
+    background:url('assets/or/fond-or.png') center/cover;
+    opacity:.07; pointer-events:none; z-index:0;
+  }
+  body::after {
+    content:''; position:fixed; inset:0; pointer-events:none; z-index:0;
+    background:
+      radial-gradient(ellipse at 12% 10%, rgba(201,168,76,.13) 0%, transparent 45%),
+      radial-gradient(ellipse at 88% 90%, rgba(201,168,76,.11) 0%, transparent 45%);
+  }
+
+  /* ===== THEME SWITCH ===== */
+  .themes {
+    position:fixed; top:18px; left:18px; z-index:60; display:flex; gap:9px;
+    background:rgba(10,9,8,.6); padding:9px 13px; border-radius:40px;
+    border:1px solid var(--or-dk); backdrop-filter:blur(10px);
+  }
+  .th { width:28px; height:28px; border-radius:50%; border:2px solid var(--or-cl); cursor:pointer; transition:.3s; }
+  .th:hover { transform:scale(1.15); }
+  .th.on { box-shadow:0 0 12px var(--or); border-width:3px; }
+  .th[data-t="sombre"]{ background:linear-gradient(135deg,#0a0908,#c9a84c); }
+  .th[data-t="ivoire"]{ background:linear-gradient(135deg,#efe9dc,#9c7e23); }
+  .th[data-t="nuit"]{ background:linear-gradient(135deg,#0a1622,#d8b450); }
+
+  /* ===== PARTICULES ===== */
+  .parts { position:fixed; inset:0; pointer-events:none; z-index:1; overflow:hidden; }
+  .part { position:absolute; border-radius:50%; background:radial-gradient(circle,var(--or-br),transparent);
+    box-shadow:0 0 8px var(--or); opacity:0; animation:rise linear infinite; }
+  @keyframes rise {
+    0%{ transform:translateY(110vh) scale(0); opacity:0; }
+    10%{ opacity:.85; } 90%{ opacity:.6; }
+    100%{ transform:translateY(-10vh) scale(1.2); opacity:0; }
+  }
+
+  /* ===== HERO ===== */
+  .hero { position:relative; min-height:100vh; display:flex; align-items:center; justify-content:center; overflow:hidden; z-index:2; }
+  /* Emplacement pour la vidéo/diaporama photos de Monaco (à venir) */
+  .hero-media { position:absolute; inset:0; z-index:0; overflow:hidden; }
+  .hero-media .slide {
+    position:absolute; inset:0; background-size:cover; background-position:center;
+    opacity:0; animation:slideShow 32s infinite; filter:saturate(1.05) brightness(.85);
+  }
+  .hero-media .slide:nth-child(1){ animation-delay:0s; }
+  .hero-media .slide:nth-child(2){ animation-delay:8s; }
+  .hero-media .slide:nth-child(3){ animation-delay:16s; }
+  .hero-media .slide:nth-child(4){ animation-delay:24s; }
+  @keyframes slideShow { 0%{opacity:0;transform:scale(1.08);} 6%{opacity:.7;} 25%{opacity:.7;} 31%{opacity:0;transform:scale(1);} 100%{opacity:0;} }
+  .hero-fallback { position:absolute; inset:0; z-index:0;
+    background:radial-gradient(ellipse at 50% 35%, #2a2113 0%, #0a0908 70%); }
+  .hero-ov { position:absolute; inset:0; z-index:1;
+    background:radial-gradient(ellipse at center, transparent 0%, rgba(10,9,8,.7) 72%, rgba(10,9,8,.96) 100%); }
+  .hero-frame { position:absolute; inset:38px; border:1px solid rgba(201,168,76,.4); z-index:2; pointer-events:none; }
+  .hero-frame::before, .hero-frame::after { content:''; position:absolute; width:78px; height:78px; border:3px solid var(--or); }
+  .hero-frame::before { top:-14px; left:-14px; border-right:none; border-bottom:none; }
+  .hero-frame::after { bottom:-14px; right:-14px; border-left:none; border-top:none; }
+  .hero-in { position:relative; z-index:3; text-align:center; padding:0 28px; animation:fadeUp 1.8s ease-out; }
+  @keyframes fadeUp { from{opacity:0; transform:translateY(40px);} to{opacity:1; transform:translateY(0);} }
+  .hero-pre { font-family:'Cinzel',serif; font-size:.82em; letter-spacing:.65em; color:var(--or); text-transform:uppercase; margin-bottom:26px; }
+  .hero-title { font-family:'Great Vibes',cursive; font-size:clamp(4.2em,11vw,9.5em); color:var(--champ); line-height:.95; text-shadow:0 0 50px rgba(201,168,76,.5); }
+  .hero-div { display:flex; align-items:center; justify-content:center; gap:20px; margin:28px 0; }
+  .hero-div span:first-child, .hero-div span:last-child { width:90px; height:1px; background:linear-gradient(90deg,transparent,var(--or),transparent); }
+  .hero-dia { color:var(--or); font-size:1.3em; transform:rotate(45deg); }
+  .hero-sub { font-family:'Cinzel',serif; font-size:clamp(.85em,2vw,1.25em); letter-spacing:.55em; text-transform:uppercase; margin:22px 0; }
+  .hero-date { font-family:'Playfair Display',serif; font-style:italic; font-size:clamp(1.1em,2.2vw,1.5em); color:var(--or-cl); letter-spacing:.12em; margin-top:28px; }
+  .hero-lieu { font-size:1em; color:var(--txt-soft); letter-spacing:.18em; margin-top:10px; }
+  .hero-cta { margin-top:42px; display:flex; gap:18px; justify-content:center; flex-wrap:wrap; }
+  .btn-cta {
+    font-family:'Cinzel',serif; font-size:.78em; letter-spacing:.25em; text-transform:uppercase;
+    padding:15px 34px; border:1px solid var(--or); color:var(--or-cl); background:rgba(201,168,76,.07);
+    cursor:pointer; transition:.35s; text-decoration:none; display:inline-flex; align-items:center; gap:10px;
+  }
+  .btn-cta:hover { background:var(--or); color:#1a1206; box-shadow:var(--sh-or); }
+  .btn-cta.full { background:var(--shine); color:#1a1206; border:none; }
+  .scroll-i { position:absolute; bottom:34px; left:50%; transform:translateX(-50%); color:var(--or); font-size:.68em; letter-spacing:.4em; text-transform:uppercase; z-index:4; animation:bob 2s infinite; }
+  .scroll-i::after { content:'↓'; display:block; font-size:2em; margin-top:8px; }
+  @keyframes bob { 0%,20%,50%,80%,100%{transform:translateX(-50%) translateY(0);} 40%{transform:translateX(-50%) translateY(-10px);} }
+
+  /* ===== SECTIONS ===== */
+  .sec { position:relative; padding:90px 20px; max-width:1180px; margin:0 auto; z-index:5; }
+  .card {
+    background:var(--card); border-radius:5px; padding:55px 48px; position:relative;
+    box-shadow:var(--sh-deep); border:1px solid rgba(201,168,76,.2);
+  }
+  .card::before, .card::after { content:''; position:absolute; left:0; right:0; height:4px; background:var(--shine); }
+  .card::before { top:0; } .card::after { bottom:0; }
+  .corner { position:absolute; width:46px; height:46px; }
+  .corner.tl{top:11px;left:11px;border-top:2px solid var(--or);border-left:2px solid var(--or);}
+  .corner.tr{top:11px;right:11px;border-top:2px solid var(--or);border-right:2px solid var(--or);}
+  .corner.bl{bottom:11px;left:11px;border-bottom:2px solid var(--or);border-left:2px solid var(--or);}
+  .corner.br{bottom:11px;right:11px;border-bottom:2px solid var(--or);border-right:2px solid var(--or);}
+
+  .s-head { text-align:center; margin-bottom:50px; }
+  .s-tag { font-family:'Cinzel',serif; font-size:.72em; letter-spacing:.6em; color:var(--or); text-transform:uppercase; padding:8px 28px; border:1px solid var(--or); display:inline-block; margin-bottom:22px; background:rgba(201,168,76,.05); }
+  .s-title { font-family:'Playfair Display',serif; font-size:clamp(2em,4.6vw,3.2em); font-style:italic; font-weight:400; margin-bottom:12px; }
+  .s-sub { font-family:'Cormorant Garamond',serif; font-style:italic; color:var(--or-cl); font-size:1.12em; letter-spacing:.12em; }
+  .s-hr { font-family:'Cinzel',serif; font-size:.8em; letter-spacing:.35em; color:var(--or); margin-top:14px; padding:7px 22px; border-top:1px solid rgba(201,168,76,.3); display:inline-block; }
+
+  /* ===== MOT MUSICIENS ===== */
+  .mot { background:linear-gradient(135deg, var(--bg-2), var(--bg-3)); border:1px solid var(--or-dk); padding:40px 45px; border-radius:5px; position:relative; font-size:1.12em; color:var(--txt-soft); font-style:italic; line-height:1.85; }
+  .mot strong { color:var(--or-cl); font-style:normal; }
+
+  /* ===== LÉGENDE ===== */
+  .leg { display:flex; justify-content:center; gap:18px; flex-wrap:wrap; margin-bottom:42px; padding:22px; background:rgba(201,168,76,.04); border:1px solid rgba(201,168,76,.16); border-radius:5px; }
+  .leg-i { display:flex; align-items:center; gap:8px; font-size:.95em; color:var(--txt-soft); }
+
+  /* ===== SET HEADERS DANS PLAYLIST ===== */
+  .set-h { display:flex; align-items:center; gap:18px; margin:42px 0 10px; }
+  .set-h:first-child { margin-top:0; }
+  .set-h-num { font-family:'Great Vibes',cursive; font-size:2.3em; color:var(--or); line-height:1; }
+  .set-h-txt { flex:1; }
+  .set-h-title { font-family:'Playfair Display',serif; font-style:italic; font-size:1.5em; color:var(--txt); }
+  .set-h-info { font-family:'Cinzel',serif; font-size:.68em; letter-spacing:.3em; color:var(--or); text-transform:uppercase; margin-top:3px; }
+  .set-h-line { flex:0 0 60px; height:1px; background:linear-gradient(90deg,var(--or),transparent); }
+
+  /* ===== PISTE ===== */
+  .trk { display:grid; grid-template-columns:54px 1fr auto; gap:20px; align-items:center; padding:16px 18px; border-bottom:1px solid rgba(201,168,76,.12); transition:.3s; border-radius:4px; }
+  .trk:hover { background:linear-gradient(90deg,transparent,rgba(201,168,76,.09),transparent); }
+  .trk.playing { background:linear-gradient(90deg,rgba(201,168,76,.16),rgba(201,168,76,.05)); box-shadow:inset 3px 0 0 var(--or); }
+  .trk.nolecteur { opacity:.78; }
+  .trk-play { width:46px; height:46px; border-radius:50%; border:1px solid var(--or-dk); background:rgba(201,168,76,.08); color:var(--or); cursor:pointer; display:flex; align-items:center; justify-content:center; transition:.3s; flex-shrink:0; }
+  .trk-play:hover { background:var(--shine); color:#1a1206; transform:scale(1.08); border-color:transparent; }
+  .trk-play svg { width:16px; height:16px; fill:currentColor; }
+  .trk.playing .trk-play { background:var(--shine); color:#1a1206; border-color:transparent; }
+  .trk-live { width:46px; height:46px; border-radius:50%; border:1px dashed var(--or-dk); color:var(--or-dk); display:flex; align-items:center; justify-content:center; font-family:'Cinzel',serif; font-size:.5em; letter-spacing:.05em; text-transform:uppercase; flex-shrink:0; text-align:center; }
+  .trk-body { min-width:0; }
+  .trk-title { font-family:'Playfair Display',serif; font-size:1.2em; font-style:italic; font-weight:600; color:var(--txt); }
+  .trk-comp { font-size:.92em; color:var(--txt-mute); margin-top:2px; }
+  .trk-scene { display:block; margin-top:5px; font-size:.86em; font-style:italic; color:var(--or-cl); padding-left:12px; border-left:2px solid var(--or-dk); }
+  .trk-right { display:flex; align-items:center; gap:14px; flex-shrink:0; }
+  .trk-voix { font-family:'Cinzel',serif; font-size:.72em; letter-spacing:.2em; color:var(--or-cl); text-transform:uppercase; white-space:nowrap; }
+  .trk-voix.duo { color:var(--or); font-weight:600; }
+  .trk-dur { font-family:'Montserrat',sans-serif; font-size:.78em; color:var(--txt-mute); min-width:42px; text-align:right; }
+  .badge { font-family:'Cinzel',serif; font-size:.6em; letter-spacing:.12em; padding:4px 10px; text-transform:uppercase; border-radius:2px; white-space:nowrap; }
+  .b-live{ background:rgba(201,168,76,.15); color:var(--or); border:1px solid var(--or); }
+  .b-instr{ background:rgba(120,120,120,.1); color:#aaa; border:1px solid #555; }
+  .b-def{ background:rgba(217,134,107,.1); color:#d9866b; border:1px solid #a05540; font-style:italic; }
+  .b-dans{ background:linear-gradient(135deg,rgba(201,168,76,.22),rgba(232,213,163,.08)); color:var(--champ); border:1px solid var(--or-cl); }
+  .trk-variant { font-family:'Montserrat',sans-serif; font-size:.75em; background:var(--bg-2); color:var(--or-cl); border:1px solid var(--or-dk); border-radius:4px; padding:5px 8px; cursor:pointer; }
+
+  /* ===== MOMENT SPÉCIAL ===== */
+  .moment { background:linear-gradient(135deg, rgba(20,17,15,.95), rgba(42,33,22,.85)); border:2px solid var(--or); padding:34px; margin:26px 0; text-align:center; position:relative; box-shadow:var(--sh-or); }
+  .moment::before,.moment::after{ content:''; position:absolute; width:34px; height:34px; border:2px solid var(--or); }
+  .moment::before{ top:-2px; left:-2px; border-right:none; border-bottom:none; }
+  .moment::after{ bottom:-2px; right:-2px; border-left:none; border-top:none; }
+  .moment-l { font-family:'Cinzel',serif; font-size:.74em; letter-spacing:.5em; color:var(--or); text-transform:uppercase; margin-bottom:10px; }
+  .moment-t { font-family:'Great Vibes',cursive; font-size:2.3em; color:var(--champ); line-height:1.1; }
+  .moment-d { font-style:italic; color:var(--txt-soft); margin-top:8px; }
+
+  /* ===== ÉQUIPE ===== */
+  .team { display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:24px; margin-top:46px; }
+  .mb { text-align:center; padding:30px 22px; background:linear-gradient(180deg,var(--bg-2),rgba(10,9,8,.4)); border:1px solid rgba(201,168,76,.22); border-radius:5px; transition:.4s; }
+  .mb:hover { border-color:var(--or); box-shadow:0 10px 38px rgba(201,168,76,.18); transform:translateY(-6px); }
+  .mb-ph { width:120px; height:120px; border-radius:50%; margin:0 auto 18px; background-size:cover; background-position:center top; border:3px solid var(--or); box-shadow:0 0 22px rgba(201,168,76,.3); }
+  .mb-ph.ph { background:linear-gradient(135deg,var(--or-dk),var(--bg-2)); display:flex; align-items:center; justify-content:center; font-family:'Great Vibes',cursive; font-size:3.2em; color:var(--or-br); }
+  .mb-role { font-family:'Cinzel',serif; font-size:.68em; letter-spacing:.45em; color:var(--or); text-transform:uppercase; margin-bottom:9px; }
+  .mb-nom { font-family:'Playfair Display',serif; font-size:1.42em; font-style:italic; }
+  .mb-det { color:var(--txt-mute); font-size:.94em; margin-top:6px; }
+
+  /* ===== INFOS ===== */
+  .infos { background:linear-gradient(135deg,var(--bg-2),rgba(10,9,8,.8)); padding:46px; border:1px solid var(--or-dk); border-radius:5px; }
+  .info-b { display:grid; grid-template-columns:200px 1fr; gap:28px; padding:20px 0; border-bottom:1px solid rgba(201,168,76,.1); }
+  .info-b:last-child{ border-bottom:none; }
+  .info-l { font-family:'Cinzel',serif; font-size:.78em; letter-spacing:.36em; color:var(--or); text-transform:uppercase; }
+  .info-v { font-size:1.08em; line-height:1.7; }
+
+  /* ===== SÉPARATEUR ===== */
+  .sep { text-align:center; padding:46px 0; position:relative; z-index:5; }
+  .sep::before { content:''; position:absolute; top:50%; left:22%; right:22%; height:1px; background:linear-gradient(90deg,transparent,var(--or),transparent); }
+  .sep span { position:relative; background:var(--bg); padding:0 28px; color:var(--or); font-size:1.4em; }
+
+  /* ===== FOOTER ===== */
+  footer { text-align:center; padding:60px 30px 40px; border-top:1px solid var(--or-dk); color:var(--txt-mute); font-style:italic; position:relative; z-index:5; }
+  footer .orn { color:var(--or); font-size:1.4em; margin:0 14px; }
+  footer .sig { max-width:180px; margin:26px auto 0; opacity:.45; }
+
+  /* ===== LECTEUR FIXE (BARRE BAS) ===== */
+  .player {
+    position:fixed; bottom:0; left:0; right:0; height:var(--player-h); z-index:80;
+    background:linear-gradient(180deg, rgba(14,11,9,.97), rgba(10,9,8,.99));
+    border-top:1px solid var(--or); box-shadow:0 -10px 40px rgba(0,0,0,.5);
+    display:grid; grid-template-columns:1fr auto 1fr; align-items:center; gap:20px;
+    padding:0 26px; backdrop-filter:blur(14px);
+    transform:translateY(100%); transition:transform .5s cubic-bezier(.2,.8,.2,1);
+  }
+  .player.show { transform:translateY(0); }
+  .player::before { content:''; position:absolute; top:0; left:0; right:0; height:2px; background:var(--shine); }
+
+  .pl-info { display:flex; align-items:center; gap:14px; min-width:0; }
+  .pl-cover { width:54px; height:54px; border-radius:6px; background:var(--shine); display:flex; align-items:center; justify-content:center; flex-shrink:0; box-shadow:0 4px 14px rgba(201,168,76,.4); position:relative; overflow:hidden; }
+  .pl-cover svg { width:24px; height:24px; fill:#1a1206; z-index:1; }
+  .pl-cover.spin::after { content:''; position:absolute; inset:0; background:conic-gradient(from 0deg, transparent, rgba(255,255,255,.25), transparent); animation:spin 3s linear infinite; }
+  @keyframes spin { to { transform:rotate(360deg); } }
+  .pl-meta { min-width:0; }
+  .pl-title { font-family:'Playfair Display',serif; font-style:italic; font-size:1.05em; color:var(--txt); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .pl-voix { font-family:'Cinzel',serif; font-size:.66em; letter-spacing:.18em; color:var(--or); text-transform:uppercase; margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+
+  .pl-center { display:flex; flex-direction:column; align-items:center; gap:8px; min-width:340px; }
+  .pl-ctrls { display:flex; align-items:center; gap:20px; }
+  .pl-btn { background:none; border:none; color:var(--txt-soft); cursor:pointer; display:flex; align-items:center; justify-content:center; transition:.25s; padding:0; }
+  .pl-btn:hover { color:var(--or-cl); transform:scale(1.12); }
+  .pl-btn svg { width:20px; height:20px; fill:currentColor; }
+  .pl-btn.play { width:48px; height:48px; border-radius:50%; background:var(--shine); color:#1a1206; box-shadow:0 4px 16px rgba(201,168,76,.45); }
+  .pl-btn.play:hover { color:#1a1206; transform:scale(1.08); }
+  .pl-btn.play svg { width:22px; height:22px; }
+  .pl-prog { display:flex; align-items:center; gap:12px; width:100%; }
+  .pl-time { font-family:'Montserrat',sans-serif; font-size:.72em; color:var(--txt-mute); min-width:38px; text-align:center; }
+  .pl-bar { flex:1; height:5px; background:rgba(201,168,76,.18); border-radius:3px; cursor:pointer; position:relative; }
+  .pl-bar-fill { height:100%; background:var(--shine); border-radius:3px; width:0%; position:relative; }
+  .pl-bar-fill::after { content:''; position:absolute; right:-6px; top:50%; transform:translateY(-50%); width:12px; height:12px; border-radius:50%; background:var(--or-br); box-shadow:0 0 8px var(--or); opacity:0; transition:opacity .2s; }
+  .pl-bar:hover .pl-bar-fill::after { opacity:1; }
+
+  .pl-right { display:flex; align-items:center; justify-content:flex-end; gap:14px; }
+  .pl-vol { display:flex; align-items:center; gap:8px; }
+  .pl-vol svg { width:18px; height:18px; fill:var(--txt-soft); }
+  .pl-vol input { width:90px; accent-color:var(--or); cursor:pointer; }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width:860px){
+    .pl-right { display:none; }
+    .pl-center { min-width:0; }
+    .player { grid-template-columns:1fr auto; gap:12px; padding:0 14px; }
+  }
+  @media (max-width:680px){
+    .card { padding:32px 18px; }
+    .sec { padding:55px 14px; }
+    .trk { grid-template-columns:44px 1fr; gap:13px; padding:14px 8px; }
+    .trk-right { grid-column:1/-1; padding-left:57px; flex-wrap:wrap; gap:8px; }
+    .trk-title { font-size:1.08em; }
+    .info-b { grid-template-columns:1fr; gap:6px; }
+    .pl-center { min-width:0; }
+    .pl-prog .pl-time { min-width:32px; font-size:.66em; }
+    .pl-ctrls { gap:14px; }
+    .themes { top:10px; left:10px; padding:7px 10px; }
+    .th { width:24px; height:24px; }
+    .pl-title { font-size:.92em; max-width:42vw; }
+    .leg { gap:9px; padding:14px; font-size:.82em; }
+    .moment-t { font-size:1.9em; }
+  }
+</style>
+</head>
+<body data-theme="sombre">
+
+<!-- THEMES -->
+<div class="themes">
+  <button class="th on" data-t="sombre" title="Sombre"></button>
+  <button class="th" data-t="ivoire" title="Ivoire"></button>
+  <button class="th" data-t="nuit" title="Nuit"></button>
+</div>
+
+<!-- PARTICULES -->
+<div class="parts" id="parts"></div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-media" id="heroMedia">
+    <div class="hero-fallback"></div>
+    <div class="slide" style="background-image:url('assets/photos/monaco/empire-1.webp')"></div>
+    <div class="slide" style="background-image:url('assets/photos/monaco/empire-2.webp')"></div>
+    <div class="slide" style="background-image:url('assets/photos/monaco/empire-3.webp')"></div>
+    <div class="slide" style="background-image:url('assets/photos/monaco/empire-4.webp')"></div>
+  </div>
+  <div class="hero-ov"></div>
+  <div class="hero-frame"></div>
+  <div class="hero-in">
+    <div class="hero-pre">Lafayette Monaco présente</div>
+    <h1 class="hero-title">Soirée&nbsp;Gala</h1>
+    <div class="hero-div"><span></span><span class="hero-dia">◆</span><span></span></div>
+    <div class="hero-sub">Diamonds in Monte-Carlo</div>
+    <div class="hero-date">23 juin 2026</div>
+    <div class="hero-lieu">Salle Empire &nbsp;·&nbsp; Hôtel de Paris &nbsp;·&nbsp; Monaco</div>
+    <div class="hero-cta">
+      <a href="#programme" class="btn-cta">Le programme</a>
+      <button class="btn-cta full" id="ctaPlay">▶ &nbsp;Écouter</button>
+    </div>
+  </div>
+  <div class="scroll-i">Programme</div>
+</section>
+
+<!-- MOT MUSICIENS -->
+<section class="sec">
+  <div class="card">
+    <span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span>
+    <div class="s-head">
+      <div class="s-tag">À l'équipe</div>
+      <h2 class="s-title">Notre programme</h2>
+    </div>
+    <div class="mot">
+      Bonjour à toutes et à tous,<br><br>
+      Voici le programme complet de la soirée du 23 juin, avec <strong>toutes les pistes regroupées au même endroit</strong>. Vous pouvez écouter chaque morceau directement ici, dans l'ordre de la soirée — il suffit d'appuyer sur lecture.<br><br>
+      Les morceaux sur <strong>instrumental</strong> ont leur bande disponible ci-dessous. Ceux marqués <strong>live</strong> seront joués directement par les musiciens. Pour <strong>My Way</strong>, vous pouvez choisir la tonalité (−½ ton ou −1 ton) grâce au menu sur la ligne du morceau.<br><br>
+      N'hésitez pas à me faire vos retours, et on cale tout ensemble à la répétition du 22.
+    </div>
+  </div>
+</section>
+
+<!-- PROGRAMME / PLAYLIST -->
+<section class="sec" id="programme">
+  <div class="card">
+    <span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span>
+    <div class="s-head">
+      <div class="s-tag">Programme musical</div>
+      <h2 class="s-title">La Playlist</h2>
+      <div class="s-sub">Tous les morceaux, dans l'ordre de la soirée</div>
+    </div>
+    <div class="leg">
+      <div class="leg-i"><span class="badge b-live">Live</span> Joué par les musiciens</div>
+      <div class="leg-i"><span class="badge b-instr">Instrumental</span> Bande disponible</div>
+      <div class="leg-i"><span class="badge b-dans">♚ Danseuse</span></div>
+      <div class="leg-i"><span class="badge b-def">À définir</span></div>
+    </div>
+    <div id="playlist"></div>
+  </div>
+</section>
+
+<div class="sep"><span>◆ ◆ ◆</span></div>
+
+<!-- ÉQUIPE -->
+<section class="sec">
+  <div class="card">
+    <span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span>
+    <div class="s-head">
+      <div class="s-tag">L'équipe artistique</div>
+      <h2 class="s-title">Voix &amp; Musiciens</h2>
+      <div class="s-sub">Trio piano · violon · violoncelle</div>
+    </div>
+    <div class="team">
+      <div class="mb"><div class="mb-ph ph">A</div><div class="mb-role">Voix</div><div class="mb-nom">Alexandra Miller</div><div class="mb-det">Soprano</div></div>
+      <div class="mb"><div class="mb-ph ph">M</div><div class="mb-role">Voix</div><div class="mb-nom">Mickaël Guedj</div><div class="mb-det">Baryton lyrique</div></div>
+      <div class="mb"><div class="mb-ph ph">♪</div><div class="mb-role">Piano</div><div class="mb-nom">Anthony Macconi</div><div class="mb-det">Arrangements &amp; direction</div></div>
+      <div class="mb"><div class="mb-ph ph">♫</div><div class="mb-role">Violon</div><div class="mb-nom">Jean-Christophe Berger</div><div class="mb-det">Soliste</div></div>
+      <div class="mb"><div class="mb-ph ph">♬</div><div class="mb-role">Violoncelle</div><div class="mb-nom">Thierry</div><div class="mb-det">Soliste</div></div>
+      <div class="mb"><div class="mb-ph ph">★</div><div class="mb-role">Production</div><div class="mb-nom">Anouk Gouzy</div><div class="mb-det">Lafayette Monaco</div></div>
+    </div>
+  </div>
+</section>
+
+<div class="sep"><span>◆ ◆ ◆</span></div>
+
+<!-- INFOS -->
+<section class="sec">
+  <div class="card">
+    <span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span>
+    <div class="s-head">
+      <div class="s-tag">Informations pratiques</div>
+      <h2 class="s-title">Répétition &amp; soirée</h2>
+    </div>
+    <div class="infos">
+      <div class="info-b"><div class="info-l">Répétition</div><div class="info-v"><strong>Lundi 22 juin 2026</strong> · 17h30 → minuit<br>Studio Rotonde, Opéra de Nice — 5<sup>e</sup> étage<br><span style="color:var(--txt-mute);font-size:.95em;">Ascenseur fond du couloir à droite · sortir à gauche · descendre les marches</span><br><span style="color:var(--or-cl);font-style:italic;font-size:.95em;">Réservation au nom d'Alexandra Miller</span></div></div>
+      <div class="info-b"><div class="info-l">Soirée gala</div><div class="info-v"><strong>Mardi 23 juin 2026</strong> · 19h00 → 22h00<br>Salle Empire, Hôtel de Paris, Monte-Carlo</div></div>
+      <div class="info-b"><div class="info-l">Thème</div><div class="info-v"><em>Diamonds in Monte-Carlo</em> — gala américain<br><span style="color:var(--txt-mute);font-size:.95em;">Diamant dans chaque coupe de champagne · gemmologue · awards</span></div></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span class="orn">✦</span> Document de travail — version du 18 juin 2026 <span class="orn">✦</span>
+  <div style="margin-top:20px;font-size:.9em;color:var(--or-dk);letter-spacing:.2em;">Soirée Gala Lafayette Monaco · 23 juin 2026</div>
+  <img src="assets/or/signature-boheme-noir.png" alt="Bohème Production" class="sig">
+</footer>
+
+<!-- ===== LECTEUR FIXE ===== -->
+<div class="player" id="player">
+  <div class="pl-info">
+    <div class="pl-cover" id="plCover"><svg viewBox="0 0 24 24"><path d="M12 3v10.55A4 4 0 1 0 14 17V7h4V3h-6z"/></svg></div>
+    <div class="pl-meta">
+      <div class="pl-title" id="plTitle">Sélectionnez un morceau</div>
+      <div class="pl-voix" id="plVoix">—</div>
+    </div>
+  </div>
+  <div class="pl-center">
+    <div class="pl-ctrls">
+      <button class="pl-btn" id="plPrev" title="Précédent"><svg viewBox="0 0 24 24"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg></button>
+      <button class="pl-btn play" id="plPlay" title="Lecture"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
+      <button class="pl-btn" id="plNext" title="Suivant"><svg viewBox="0 0 24 24"><path d="M16 6h2v12h-2zm-2 6L5.5 6v12z"/></svg></button>
+    </div>
+    <div class="pl-prog">
+      <span class="pl-time" id="plCur">0:00</span>
+      <div class="pl-bar" id="plBar"><div class="pl-bar-fill" id="plFill"></div></div>
+      <span class="pl-time" id="plDur">0:00</span>
+    </div>
+  </div>
+  <div class="pl-right">
+    <div class="pl-vol">
+      <svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3a4.5 4.5 0 0 0-2.5-4v8a4.5 4.5 0 0 0 2.5-4z"/></svg>
+      <input type="range" id="plVolRange" min="0" max="100" value="85">
+    </div>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   DONNÉES — PLAYLIST (source de vérité)
+   ============================================================ */
+const DIR = 'instrumentaux/';
+const TRACKS = [
+  // ---- SET 1 ----
+  { set:'Set 1 — Opéra & Broadway', setInfo:'19h45 → 20h35', heads:true,
+    t:'Largo al factotum', c:'Le Barbier de Séville — Rossini', v:'Mickaël', badge:'instr',
+    file:'Set1-01 - Largo al factotum (Mickael).mp3', dur:313, scene:'Entrée surprise depuis une table, déambulation' },
+  { t:'Air du Toréador', c:'Carmen — Bizet', v:'Mickaël', badge:'instr',
+    file:'Set1-02 - Toreador (Mickael).mp3', dur:282 },
+  { t:'Habanera', c:'Carmen — Bizet · version Mathilda', v:'Alexandra', badge:'live', dans:true,
+    file:'Set1-03 - Habanera Mathilda (Alexandra) no vocal.mp3', dur:265, scene:'Entrée de la danseuse' },
+  { t:'Memory', c:'Cats — Lloyd Webber · instrumental', v:'Musiciens', badge:'live', live:true,
+    scene:'Interlude post-speech · soliste violon (Jean-Christophe)' },
+  { t:'I Dreamed a Dream', c:'Les Misérables — Schönberg', v:'Alexandra', badge:'instr',
+    file:'Set1-04 - I Dreamed a Dream (Alexandra).mp3', dur:188 },
+  { t:'The Music of the Night', c:'Phantom of the Opera — Lloyd Webber', v:'Mickaël', badge:'instr',
+    file:'Set1-05 - The Music of the Night (Mickael).mp3', dur:312, scene:'Mickaël en Fantôme · Alexandra en Christine hypnotisée' },
+  { t:'The Phantom of the Opera', c:'Phantom of the Opera — Lloyd Webber', v:'Duo', badge:'instr', duo:true,
+    file:'Set1-06 - The Phantom of the Opera (Duo).mp3', dur:259, scene:'Les musiciens explosent sur le riff iconique' },
+
+  // ---- ANNONCE ----
+  { set:'Remise des prix', setInfo:'20h35', heads:true,
+    t:'Diamonds Are Forever', c:'Shirley Bassey', v:'Alexandra', badge:'instr',
+    file:'Annonce - Diamonds Are Forever (Alexandra).mp3', dur:174, scene:'Annonce des gagnants par le président' },
+
+  // ---- SET 2 ----
+  { set:'Set 2 — Paris & Crooner', setInfo:'20h40 → 21h10', heads:true,
+    t:'La Vie en Rose', c:'Édith Piaf · piano classique', v:'Alexandra', badge:'live',
+    file:'Set2-01 - La Vie en Rose (Alexandra).mp3', dur:187 },
+  { t:"L'Hymne à l'amour", c:'Édith Piaf — version Josh Groban', v:'Mickaël', badge:'def',
+    file:"Set2-02 - L'Hymne a l'amour (Mickael) version Josh Groban.mp3", dur:247 },
+  { t:'La Complainte de la Butte', c:'Renoir / Van Parys — French Cancan', v:'Alexandra', badge:'live', dans:true,
+    file:'Set2-03 - La Complainte de la Butte (Alexandra).mp3', dur:203 },
+  { t:'For me… Formidable', c:'Charles Aznavour', v:'Mickaël', badge:'live',
+    file:'Set2-04 - For me Formidable (Mickael).mp3', dur:148, scene:'Clin d\'œil bilingue franco-anglais' },
+  { t:'Mon amant de Saint-Jean', c:'version Patrick Bruel', v:'Mickaël', badge:'instr', dans:true,
+    file:'Set2-05 - Mon amant de Saint-Jean (Mickael).mp3', dur:202, scene:'Mini-théâtre musical avec la danseuse' },
+  { t:'My Way / Comme d\'habitude', c:'Sinatra — Claude François · duo bilingue', v:'Duo', badge:'instr', duo:true,
+    variants:[
+      { label:'−½ ton', file:'Set2-06a - My Way Comme d\'habitude (Duo) version -1demi-ton.mp3', dur:245 },
+      { label:'−1 ton', file:'Set2-06b - My Way Comme d\'habitude (Duo) version -1ton.mp3', dur:245 },
+    ], scene:'Mickaël en anglais, Alexandra en français — final crescendo' },
+
+  // ---- SET 3 + FINAL ----
+  { set:'Set 3 & Final', setInfo:'21h10 → 22h00', heads:true,
+    t:'Can\'t Help Falling in Love', c:'Elvis Presley', v:'Alexandra', badge:'live', live:true },
+  { t:'Per te', c:'Josh Groban', v:'Mickaël', badge:'def', dans:true,
+    file:'Set3-02 - Per te (Mickael).mp3', dur:290, scene:'Intervention de la danseuse' },
+  { t:'At Last', c:'Etta James', v:'Alexandra', badge:'live', live:true },
+  { t:'Parla più piano', c:'Le Parrain — Nino Rota · Bocelli', v:'Mickaël', badge:'def',
+    file:'Set3-04 - Parla piu piano (Mickael).mp3', dur:198 },
+  { t:'What a Wonderful World', c:'Louis Armstrong · tonalité C', v:'Alexandra', badge:'live',
+    file:'Set3-05 - What a Wonderful World (Alexandra).mp3', dur:279 },
+  { t:'Fly Me to the Moon', c:'Frank Sinatra', v:'Mickaël', badge:'live',
+    file:'Set3-06 - Fly Me to the Moon (Mickael).mp3', dur:170 },
+  { t:'Never Enough', c:'The Greatest Showman', v:'Alexandra', badge:'instr',
+    file:'Set3-07 - Never Enough (Alexandra).mp3', dur:206 },
+  { t:'The Greatest Show', c:'The Greatest Showman', v:'Mickaël', badge:'instr',
+    file:'Set3-08 - The Greatest Show (Mickael).mp3', dur:303 },
+  { t:'The Time of My Life', c:'Dirty Dancing', v:'Duo', badge:'instr', duo:true,
+    file:'Set3-09 - The Time of My Life (Duo) nouvelle version.mp3', dur:319 },
+  { t:'New York, New York', c:'Frank Sinatra · duo bilingue', v:'Duo', badge:'instr', duo:true,
+    file:'Set3-10 - New York New York (Duo).mp3', dur:282 },
+  { t:'Con te partirò', c:'Andrea Bocelli', v:'Duo', badge:'instr', duo:true,
+    file:'Set3-11 - Con te partiro (Duo) avec choeurs.mp3', dur:255, scene:'Clôture grandiose italienne' },
+
+  // ---- SPARES ----
+  { set:'En réserve (spares)', setInfo:'si besoin', heads:true,
+    t:'Lady', c:'Lionel Richie', v:'Mickaël', badge:'instr',
+    file:'Spare - Lady (Mickael) Lionel Richie.mp3', dur:263 },
+  { t:'El Tango de Roxanne', c:'Moulin Rouge', v:'Mickaël', badge:'instr',
+    file:'Spare - Tango de Roxanne (Mickael) Moulin Rouge.mp3', dur:256 },
+];
+
+/* ============================================================
+   GÉNÉRATION DE LA PLAYLIST
+   ============================================================ */
+const playlistEl = document.getElementById('playlist');
+const fmt = s => { if(!s||isNaN(s)) return '0:00'; const m=Math.floor(s/60), x=Math.floor(s%60); return m+':'+(x<10?'0'+x:x); };
+const badgeHtml = b => ({live:'<span class="badge b-live">Live</span>', instr:'<span class="badge b-instr">Instrumental</span>', def:'<span class="badge b-def">À définir</span>'}[b]||'');
+
+let playableIndex = []; // indices des pistes jouables (avec fichier ou variants)
+
+TRACKS.forEach((tk, i) => {
+  if (tk.heads) {
+    const h = document.createElement('div');
+    h.className = 'set-h';
+    h.innerHTML = `<div class="set-h-num">♪</div><div class="set-h-txt"><div class="set-h-title">${tk.set}</div><div class="set-h-info">${tk.setInfo||''}</div></div><div class="set-h-line"></div>`;
+    playlistEl.appendChild(h);
+  }
+  const hasAudio = !!(tk.file || tk.variants);
+  if (hasAudio) playableIndex.push(i);
+
+  const row = document.createElement('div');
+  row.className = 'trk' + (hasAudio ? '' : ' nolecteur');
+  row.dataset.idx = i;
+
+  // bouton play ou pastille live
+  let left;
+  if (hasAudio) {
+    left = `<button class="trk-play" data-play="${i}" aria-label="Lire"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>`;
+  } else {
+    left = `<div class="trk-live">Live</div>`;
+  }
+
+  // variantes (My Way)
+  let variantSel = '';
+  if (tk.variants) {
+    variantSel = `<select class="trk-variant" data-variant="${i}">` +
+      tk.variants.map((v,vi)=>`<option value="${vi}">${v.label}</option>`).join('') + `</select>`;
+  }
+
+  const dans = tk.dans ? '<span class="badge b-dans">♚ Danseuse</span>' : '';
+  const dur = tk.variants ? fmt(tk.variants[0].dur) : (tk.dur ? fmt(tk.dur) : '');
+  const scene = tk.scene ? `<span class="trk-scene">→ ${tk.scene}</span>` : '';
+
+  row.innerHTML = `
+    ${left}
+    <div class="trk-body">
+      <div class="trk-title">${tk.t}</div>
+      <div class="trk-comp">${tk.c}</div>
+      ${scene}
+    </div>
+    <div class="trk-right">
+      ${variantSel}
+      ${dans}
+      ${badgeHtml(tk.badge)}
+      <span class="trk-voix ${tk.duo?'duo':''}">${tk.v}</span>
+      <span class="trk-dur" data-dur="${i}">${dur}</span>
+    </div>`;
+  playlistEl.appendChild(row);
+});
+
+/* ============================================================
+   LECTEUR AUDIO PRO — crossfade avec 2 éléments Audio
+   ============================================================ */
+const player = document.getElementById('player');
+const plTitle = document.getElementById('plTitle');
+const plVoix = document.getElementById('plVoix');
+const plPlay = document.getElementById('plPlay');
+const plPrev = document.getElementById('plPrev');
+const plNext = document.getElementById('plNext');
+const plCur = document.getElementById('plCur');
+const plDur = document.getElementById('plDur');
+const plBar = document.getElementById('plBar');
+const plFill = document.getElementById('plFill');
+const plCover = document.getElementById('plCover');
+const plVolRange = document.getElementById('plVolRange');
+
+const audios = [new Audio(), new Audio()];
+let active = 0;              // index du lecteur audio actif (0 ou 1)
+let curTrack = -1;          // index dans TRACKS
+let volume = 0.85;
+let fadeTimer = null;
+const FADE_MS = 650;
+
+audios.forEach(a => { a.preload = 'none'; a.volume = volume; });
+
+function srcFor(tk) {
+  let f = tk.file;
+  if (tk.variants) f = tk.variants[tk._variant||0].file;
+  return encodeURI(DIR + f);
+}
+
+function clearFade(){ if(fadeTimer){ cancelAnimationFrame(fadeTimer); fadeTimer=null; } }
+
+function crossfade(toAudio, fromAudio) {
+  clearFade();
+  const start = performance.now();
+  toAudio.volume = 0;
+  function step(now){
+    const k = Math.min(1, (now - start)/FADE_MS);
+    toAudio.volume = volume * k;
+    if (fromAudio) fromAudio.volume = volume * (1-k);
+    if (k < 1) { fadeTimer = requestAnimationFrame(step); }
+    else { if(fromAudio){ fromAudio.pause(); } fadeTimer=null; }
+  }
+  fadeTimer = requestAnimationFrame(step);
+}
+
+function bindAudio(a){
+  a.ontimeupdate = () => {
+    if (a !== audios[active]) return;
+    const d = a.duration||0;
+    plCur.textContent = fmt(a.currentTime);
+    plDur.textContent = fmt(d);
+    plFill.style.width = d ? (a.currentTime/d*100)+'%' : '0%';
+  };
+  a.onended = () => { if (a === audios[active]) nextTrack(); };
+  a.onloadedmetadata = () => {
+    if (a === audios[active]) plDur.textContent = fmt(a.duration);
+  };
+}
+bindAudio(audios[0]); bindAudio(audios[1]);
+
+function playTrack(idx) {
+  const tk = TRACKS[idx];
+  if (!tk || (!tk.file && !tk.variants)) return;
+
+  player.classList.add('show');
+
+  if (idx === curTrack) { togglePlay(); return; }
+
+  const from = audios[active];
+  const to = audios[1-active];
+  to.src = srcFor(tk);
+  to.currentTime = 0;
+  to.play().then(()=>{
+    crossfade(to, from && !from.paused ? from : null);
+  }).catch(()=>{});
+
+  active = 1-active;
+  curTrack = idx;
+  updateUI(true);
+}
+
+function togglePlay() {
+  const a = audios[active];
+  if (curTrack < 0) { // rien encore : lance la 1re piste jouable
+    if (playableIndex.length) playTrack(playableIndex[0]);
+    return;
+  }
+  if (a.paused) { a.play(); a.volume = volume; } else { a.pause(); }
+  updateUI();
+}
+
+function neighbourPlayable(dir){
+  const pos = playableIndex.indexOf(curTrack);
+  if (pos === -1) return playableIndex[0];
+  let np = pos + dir;
+  if (np < 0) np = playableIndex.length-1;
+  if (np >= playableIndex.length) np = 0;
+  return playableIndex[np];
+}
+function nextTrack(){ playTrack(neighbourPlayable(1)); }
+function prevTrack(){
+  // si > 3s, on revient au début du morceau
+  const a = audios[active];
+  if (a.currentTime > 3) { a.currentTime = 0; return; }
+  playTrack(neighbourPlayable(-1));
+}
+
+function updateUI(switched){
+  const a = audios[active];
+  const tk = TRACKS[curTrack];
+  if (tk){
+    plTitle.textContent = tk.t;
+    plVoix.textContent = tk.v + (tk.variants ? ' · '+tk.variants[tk._variant||0].label : '');
+  }
+  const playing = tk && !a.paused;
+  plPlay.innerHTML = playing
+    ? '<svg viewBox="0 0 24 24"><path d="M6 5h4v14H6zm8 0h4v14h-4z"/></svg>'
+    : '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';
+  plCover.classList.toggle('spin', playing);
+
+  document.querySelectorAll('.trk').forEach(r=>{
+    const i = +r.dataset.idx;
+    const isCur = i === curTrack;
+    r.classList.toggle('playing', isCur);
+    const btn = r.querySelector('.trk-play');
+    if (btn){
+      btn.innerHTML = (isCur && playing)
+        ? '<svg viewBox="0 0 24 24"><path d="M6 5h4v14H6zm8 0h4v14h-4z"/></svg>'
+        : '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';
+    }
+  });
+}
+
+/* ===== ÉVÉNEMENTS ===== */
+playlistEl.addEventListener('click', e => {
+  const b = e.target.closest('[data-play]');
+  if (b) { playTrack(+b.dataset.play); }
+});
+playlistEl.addEventListener('change', e => {
+  const s = e.target.closest('[data-variant]');
+  if (s){
+    const idx = +s.dataset.variant;
+    TRACKS[idx]._variant = +s.value;
+    // maj durée affichée
+    const durEl = document.querySelector(`[data-dur="${idx}"]`);
+    if (durEl) durEl.textContent = fmt(TRACKS[idx].variants[+s.value].dur);
+    // si en cours de lecture, recharger
+    if (idx === curTrack){
+      const a = audios[active];
+      const wasPlaying = !a.paused;
+      a.src = srcFor(TRACKS[idx]); a.volume = volume;
+      if (wasPlaying) a.play();
+      updateUI();
+    }
+  }
+});
+plPlay.onclick = togglePlay;
+plNext.onclick = nextTrack;
+plPrev.onclick = prevTrack;
+document.getElementById('ctaPlay').onclick = () => { if(playableIndex.length) playTrack(playableIndex[0]); };
+
+plBar.addEventListener('click', e => {
+  const a = audios[active];
+  if (!a.duration) return;
+  const rect = plBar.getBoundingClientRect();
+  a.currentTime = ((e.clientX - rect.left)/rect.width) * a.duration;
+});
+plVolRange.addEventListener('input', e => {
+  volume = e.target.value/100;
+  audios[active].volume = volume;
+});
+
+/* ============================================================
+   THEMES + PARTICULES + DIAPORAMA HERO
+   ============================================================ */
+document.querySelectorAll('.th').forEach(b=>{
+  b.onclick = () => {
+    document.querySelectorAll('.th').forEach(x=>x.classList.remove('on'));
+    b.classList.add('on');
+    const t=b.dataset.t;
+    if(t==='sombre') document.body.removeAttribute('data-theme');
+    else document.body.setAttribute('data-theme', t);
+  };
+});
+
+const parts = document.getElementById('parts');
+for(let i=0;i<46;i++){
+  const p=document.createElement('div'); p.className='part';
+  const s=Math.random()*4+1;
+  p.style.width=s+'px'; p.style.height=s+'px';
+  p.style.left=Math.random()*100+'%';
+  p.style.animationDuration=(Math.random()*18+12)+'s';
+  p.style.animationDelay=(Math.random()*16)+'s';
+  parts.appendChild(p);
+}
+
+/* DIAPORAMA HERO — activé automatiquement si des photos existent dans assets/photos/monaco/
+   Pour activer : déposer monaco-1.jpg … monaco-4.jpg et décommenter la ligne PHOTOS ci-dessous */
+const PHOTOS = []; // ex: ['assets/photos/monaco/monaco-1.jpg', ...]
+if (PHOTOS.length){
+  const media = document.getElementById('heroMedia');
+  media.innerHTML = PHOTOS.slice(0,4).map(src=>`<div class="slide" style="background-image:url('${src}')"></div>`).join('');
+}
+
+/* fade-in sections */
+const obs = new IntersectionObserver(es=>{
+  es.forEach(e=>{ if(e.isIntersecting){ e.target.style.opacity='1'; e.target.style.transform='translateY(0)'; } });
+},{threshold:.05});
+document.querySelectorAll('.sec').forEach(s=>{
+  s.style.opacity='0'; s.style.transform='translateY(40px)'; s.style.transition='all 1.1s ease-out'; obs.observe(s);
+});
+</script>
+</body>
+</html>
