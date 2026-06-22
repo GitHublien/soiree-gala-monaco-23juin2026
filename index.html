@@ -309,10 +309,12 @@
   .pl-btn.play svg { width:22px; height:22px; }
   .pl-prog { display:flex; align-items:center; gap:12px; width:100%; }
   .pl-time { font-family:'Montserrat',sans-serif; font-size:.72em; color:var(--txt-mute); min-width:38px; text-align:center; }
-  .pl-bar { flex:1; height:5px; background:rgba(201,168,76,.18); border-radius:3px; cursor:pointer; position:relative; }
-  .pl-bar-fill { height:100%; background:var(--shine); border-radius:3px; width:0%; position:relative; }
-  .pl-bar-fill::after { content:''; position:absolute; right:-6px; top:50%; transform:translateY(-50%); width:12px; height:12px; border-radius:50%; background:var(--or-br); box-shadow:0 0 8px var(--or); opacity:0; transition:opacity .2s; }
-  .pl-bar:hover .pl-bar-fill::after { opacity:1; }
+  /* zone tactile large : padding vertical transparent pour attraper facilement au doigt */
+  .pl-bar { flex:1; height:6px; background:rgba(201,168,76,.18); border-radius:4px; cursor:pointer; position:relative; padding:0; touch-action:none; }
+  .pl-bar::before { content:''; position:absolute; left:0; right:0; top:-16px; bottom:-16px; } /* zone de capture tactile invisible */
+  .pl-bar-fill { height:100%; background:var(--shine); border-radius:4px; width:0%; position:relative; pointer-events:none; }
+  .pl-bar-fill::after { content:''; position:absolute; right:-8px; top:50%; transform:translateY(-50%); width:16px; height:16px; border-radius:50%; background:var(--or-br); box-shadow:0 0 10px var(--or); opacity:0; transition:opacity .2s; }
+  .pl-bar:hover .pl-bar-fill::after, .pl-bar.grabbing .pl-bar-fill::after { opacity:1; }
 
   .pl-right { display:flex; align-items:center; justify-content:flex-end; gap:14px; }
   .pl-vol { display:flex; align-items:center; gap:8px; }
@@ -340,6 +342,12 @@
     .pl-title { font-size:.92em; max-width:42vw; }
     .leg { gap:9px; padding:14px; font-size:.82em; }
     .moment-t { font-size:1.9em; }
+    /* Barre fine et élégante, mais zone tactile invisible large = facile au doigt */
+    .pl-bar { height:6px; border-radius:4px; }
+    .pl-bar::before { top:-22px; bottom:-22px; }
+    .pl-bar-fill { border-radius:4px; }
+    .pl-bar-fill::after { opacity:1; width:15px; height:15px; right:-7px; box-shadow:0 0 8px var(--or), 0 1px 4px rgba(0,0,0,.35); }
+    .pl-prog { gap:10px; }
   }
 </style>
 </head>
@@ -820,12 +828,33 @@ plNext.onclick = nextTrack;
 plPrev.onclick = prevTrack;
 document.getElementById('ctaPlay').onclick = () => { if(playableIndex.length) playTrack(playableIndex[0]); };
 
-plBar.addEventListener('click', e => {
+/* Navigation dans le morceau : clic + glissement (souris ET tactile) */
+let seeking = false;
+function seekFromX(clientX){
   const a = audios[active];
   if (!a.duration) return;
   const rect = plBar.getBoundingClientRect();
-  a.currentTime = ((e.clientX - rect.left)/rect.width) * a.duration;
-});
+  let ratio = (clientX - rect.left)/rect.width;
+  ratio = Math.max(0, Math.min(1, ratio));
+  // aperçu visuel immédiat même avant de relâcher
+  plFill.style.width = (ratio*100)+'%';
+  plCur.textContent = fmt(ratio * a.duration);
+  return ratio;
+}
+function commitSeek(clientX){
+  const a = audios[active];
+  if (!a.duration) return;
+  const r = seekFromX(clientX);
+  if (r != null) a.currentTime = r * a.duration;
+}
+// Souris
+plBar.addEventListener('mousedown', e => { seeking=true; plBar.classList.add('grabbing'); seekFromX(e.clientX); });
+window.addEventListener('mousemove', e => { if(seeking) seekFromX(e.clientX); });
+window.addEventListener('mouseup', e => { if(seeking){ commitSeek(e.clientX); seeking=false; plBar.classList.remove('grabbing'); } });
+// Tactile
+plBar.addEventListener('touchstart', e => { seeking=true; plBar.classList.add('grabbing'); seekFromX(e.touches[0].clientX); }, {passive:true});
+plBar.addEventListener('touchmove', e => { if(seeking){ seekFromX(e.touches[0].clientX); } }, {passive:true});
+plBar.addEventListener('touchend', e => { if(seeking){ const t=e.changedTouches[0]; commitSeek(t.clientX); seeking=false; plBar.classList.remove('grabbing'); } });
 plVolRange.addEventListener('input', e => {
   volume = e.target.value/100;
   audios[active].volume = volume;
